@@ -107,8 +107,33 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\MvvmOkraAppBuilderExtensions.cs" />
+    <Compile Include="DependencyInjection\IMvvmBuilder.cs" />
+    <Compile Include="DependencyInjection\MvvmBuilder.cs" />
+    <Compile Include="DependencyInjection\MvvmServiceCollectionExtensions.cs" />
+    <Compile Include="Lifetime\UniversalAppLaunchRequest.cs" />
+    <Compile Include="Mvvm\DefaultAppShell.xaml.cs">
+      <DependentUpon>DefaultAppShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\ViewHost.xaml.cs">
+      <DependentUpon>ViewHost.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\ViewPresenter.cs" />
+    <Compile Include="Mvvm\WindowAppHost.cs" />
+    <Compile Include="OkraApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Okra.Platform.UniversalWindows.rd.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Mvvm\DefaultAppShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\ViewHost.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
