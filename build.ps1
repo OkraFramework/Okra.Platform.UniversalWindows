@@ -29,5 +29,5 @@ Else
 # Run the build script
 
 $buildScript = Join-Path $okraBuildTools "build.ps1"
-Invoke-Expression "& `"$buildScript`" $Args"
+Invoke-Expression "& `"$buildScript`" -useMSBuild=true $Args"
 exit $LASTEXITCODE
