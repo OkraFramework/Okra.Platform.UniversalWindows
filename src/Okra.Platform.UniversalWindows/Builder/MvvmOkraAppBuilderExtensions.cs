@@ -1,4 +1,5 @@
-﻿using Okra.Lifetime;
+﻿using Okra.DependencyInjection;
+using Okra.Lifetime;
 using Okra.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,15 @@ namespace Okra.Builder
 
                 if (request != null && request.EventArgs.Kind == ActivationKind.Launch)
                 {
-                    // TODO : Create a new app container
+                    // TODO : Handle lifetime of app container?
+                    var appContainerFactory = context.Services.GetRequiredService<IAppContainerFactory>();
+                    var shellAppContainer = appContainerFactory.CreateAppContainer();
                     // TODO : Also restore navigation stack (or whole root app container?)
-                    var appHost = app.ApplicationServices.GetRequiredService<WindowAppHost>();
-                    var appShell = app.ApplicationServices.GetRequiredService(shellType);
+                    var appHost = shellAppContainer.Services.GetRequiredService<WindowAppHost>();
+                    var appShell = shellAppContainer.Services.GetRequiredService(shellType);
                     appHost.SetShell(appShell);
 
-                    var navigationManager = app.ApplicationServices.GetRequiredService<INavigationManager>();
+                    var navigationManager = shellAppContainer.Services.GetRequiredService<INavigationManager>();
                     navigationManager.NavigateTo(new PageInfo(pageName, arguments));
 
                     return Task.FromResult<bool>(true);

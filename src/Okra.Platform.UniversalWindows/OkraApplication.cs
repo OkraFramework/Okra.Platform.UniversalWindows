@@ -1,4 +1,7 @@
-﻿using Okra.Lifetime;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Okra.Builder;
+using Okra.DependencyInjection;
+using Okra.Lifetime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +15,8 @@ namespace Okra
     {
         // *** Fields ***
 
-        private IOkraBootstrapper _bootstrapper;
+        private IAppContainer _rootAppContainer;
+        private AppLaunchDelegate _appLaunch;
 
         // *** Constructors ***
 
@@ -23,9 +27,14 @@ namespace Okra
 
             this.Resuming += OnResuming;
             this.Suspending += OnSuspending;
+            
+            bootstrapper.Initialize();
 
-            _bootstrapper = bootstrapper;
-            _bootstrapper.Initialize();
+            var appContainerFactory = bootstrapper.ApplicationServices.GetRequiredService<IAppContainerFactory>();
+            _rootAppContainer = appContainerFactory.CreateAppContainer();
+
+            var appBuilder = bootstrapper.ApplicationServices.GetRequiredService<IOkraAppBuilder>();
+            _appLaunch = appBuilder.Build();
         }
 
         // *** Overriden Base Methods ***
@@ -81,13 +90,13 @@ namespace Okra
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferal = e.SuspendingOperation.GetDeferral();
-            await _bootstrapper.Deactivate();
+            await _rootAppContainer.Deactivate();
             deferal.Complete();
         }
 
         private async void OnResuming(object sender, object e)
         {
-            await _bootstrapper.Activate();
+            await _rootAppContainer.Activate();
         }
 
         // *** Private Methods ***
@@ -95,7 +104,8 @@ namespace Okra
         private async void Activate(IActivatedEventArgs args)
         {
             var appLaunchRequest = new UniversalAppLaunchRequest(args);
-            await _bootstrapper.Launch(appLaunchRequest);
+            var appLaunchContext = new UniversalAppLaunchContext(_rootAppContainer.Services, appLaunchRequest);
+            await _appLaunch(appLaunchContext);
         }
     }
 }

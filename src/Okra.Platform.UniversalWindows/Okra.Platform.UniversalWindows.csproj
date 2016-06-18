@@ -111,6 +111,7 @@
     <Compile Include="DependencyInjection\IMvvmBuilder.cs" />
     <Compile Include="DependencyInjection\MvvmBuilder.cs" />
     <Compile Include="DependencyInjection\MvvmServiceCollectionExtensions.cs" />
+    <Compile Include="Lifetime\UniversalAppLaunchContext.cs" />
     <Compile Include="Lifetime\UniversalAppLaunchRequest.cs" />
     <Compile Include="Mvvm\DefaultAppShell.xaml.cs">
       <DependentUpon>DefaultAppShell.xaml</DependentUpon>
